@@ -19,31 +19,25 @@
       <div id="app" class="main-content" v-cloak>
          <!-- Left Side Filters -->
          <aside class="pokedex-filters">
+            {{ message }}
             <!-- Searchbox -->
             <div class="nice-input-wrapper">
-               <input type="text" placeholder="Search by name" class="nice-input">
+                  <input v-model="searchText" type="text" placeholder="Search by name" class="nice-input">
+               <!--<input :value="searchText" v-on:input="{...}" type="text" placeholder="Search by name" class="nice-input">-->
+               <!-- v-on:input es equivalente a @input-->
                <span class="focus-border"><i></i></span>
             </div>
             <!-- Type Filters -->
             <p class="checkboxes-list-title">Type</p>
             <div class="checkboxes-list">
                <!-- Type Selector -->
-               <div class="md-checkbox">
-                  <input id="checkbox-grass" type="checkbox" value="grass">
-                  <label for="checkbox-grass">
-                     <i class="material-icons" style="color: rgb(120, 200, 80);">lens</i>
-                     <span class="label-title">grass</span>
+               <div v-for="(color, type) in typeColor" class="md-checkbox">
+                  <input :id="'checkbox-' + type" type="checkbox" :value="type">
+                  <label :for="'checkbox-' + type">
+                     <i class="material-icons" :style="{color: color}">lens</i>
+                     <span class="label-title">{{ type }}</span>
                   </label>
                </div>
-               <!-- Type Selector -->
-               <div class="md-checkbox">
-                  <input id="checkbox-poison" type="checkbox" value="poison">
-                  <label for="checkbox-poison">
-                     <i class="material-icons" style="color: rgb(160, 64, 160);">lens</i>
-                     <span class="label-title">poison</span>
-                  </label>
-               </div>
-
             </div>
          </aside>
          <!-- Pokemons View -->
@@ -51,40 +45,32 @@
             <!-- Full Pokemons List in: https://api.jsonbin.io/b/5ab37f77989617146bd6eb29 -->
             <article class="pokemons-list">
                <!-- Pokemon Card -->
-               <div class="pokemon-card">
+               <div v-for="pokemon in filteredPokemons" class="pokemon-card">
                   <div class="background-wrapper">
-                     <div style="background-color: rgb(160, 64, 160);"></div>
-                     <div style="background-color: rgb(120, 200, 80);"></div>
+                     <div 
+                        v-for="type in pokemon.types" 
+                        :key="type"
+                        :style="{'background-color': typeColor[type]}"></div>
+                     <!-- <div :style="'background-color: ' + typeColor[pokemon.types[0]]"></div> -->
                   </div>
-                  <span class="remove-pokemon">
+                  <span @click="removePokemon(pokemon)" class="remove-pokemon">
                      <i class="material-icons">close</i>
                   </span> 
                   <div class="image-wrapper">
-                     <img src="images/pokemons/bulbasaur.png" alt="bulbasaur" class="pokemon-image">
+                     <img v-bind:src="pokemon.image" alt="bulbasaur" class="pokemon-image">
+                     <!-- tb se acepta la siguiente forma
+                     <img :src="pokemon.image" alt="bulbasaur" class="pokemon-image">
+                     -->
                   </div>
                   <div class="pokemon-title">
-                     bulbasaur
-                  </div>
-               </div>
-               <!-- Pokemon Card -->
-               <div class="pokemon-card">
-                  <div class="background-wrapper">
-                     <div style="background-color: rgb(160, 64, 160);"></div>
-                     <div style="background-color: rgb(120, 200, 80);"></div>
-                  </div>
-                  <span class="remove-pokemon">
-                     <i class="material-icons">close</i>
-                  </span> 
-                  <div class="image-wrapper">
-                     <img src="images/pokemons/ivysaur.png" alt="bulbasaur" class="pokemon-image">
-                  </div>
-                  <div class="pokemon-title">
-                     ivysaur
+                     {{ pokemon.name }} <!-- esto es extrapolación de cadena -->
                   </div>
                </div>
 
             </article>
          </main>
       </div>
+   <script src="https://unpkg.com/vue"></script>
+   <script src="main.js"></script>
    </body>
 </html>
